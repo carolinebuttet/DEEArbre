@@ -40,7 +40,7 @@ void setup() {
   while (!Serial) continue;
 
   // start the Ethernet connection:
-  /*
+  
   Serial.println("Initialize Ethernet with DHCP:");
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
@@ -64,24 +64,24 @@ void setup() {
   }
 
   delay(1000);
-  */
-  parseData();
+  
+  //parseData();
 }
 
 void loop() {
     // if there's incoming data from the net connection.
     // send it out the serial port.  This is for debugging
     // purposes only:
-    /*
+    
     if (client.available()) {
       char c = client.read();
       Serial.write(c);
     }
-  */
+  
     // if 5 seconds have passed since your last connection,
     // then connect again and send data:
     if (millis() - lastConnectionTime > postingInterval) {
-      //httpRequest();
+      httpRequest();
       parseData();
      
     }
@@ -125,7 +125,7 @@ void httpRequest(){
  
     
     // note the time that the connection was made:
-    //lastConnectionTime = millis();
+    lastConnectionTime = millis();
   } else {
     // if you couldn't make a connection:
     Serial.println("connection failed");
@@ -138,11 +138,8 @@ void parseData(){
     const size_t capacity = JSON_ARRAY_SIZE(7) + 8*JSON_OBJECT_SIZE(7) + 1880;
     DynamicJsonDocument doc(capacity);
     
-    const char* json = "{\"caroline\":\"still the best!\",\"version\":\"https://jsonfeed.org/version/1\",\"title\":\"Feed\",\"description\":\"Hello, bonne année et joyeuse Pâques \n John Doe\",\"home_page_url\":\"http://localhost/base-kirby\",\"feed_url\":\"http://localhost/base-kirby/feed/\",\"items\":[{\"id\":\"http://localhost/base-kirby/home/article-1\",\"url\":\"http://localhost/base-kirby/home/article-1\",\"id_print\":\"0\",\"title\":\"article-1\",\"content_html\":\"Le message numero un\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:26:18+00:00\"},{\"id\":\"http://localhost/base-kirby/home/article-2\",\"url\":\"http://localhost/base-kirby/home/article-2\",\"id_print\":\"1\",\"title\":\"article-2\",\"content_html\":\"Le message numero deux\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:26:29+00:00\"},{\"id\":\"http://localhost/base-kirby/home/article-3\",\"url\":\"http://localhost/base-kirby/home/article-3\",\"id_print\":\"2\",\"title\":\"article-3\",\"content_html\":\"Le message numero trois\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:26:54+00:00\"},{\"id\":\"http://localhost/base-kirby/home/article-4\",\"url\":\"http://localhost/base-kirby/home/article-4\",\"id_print\":\"3\",\"title\":\"article-4\",\"content_html\":\"Le message numero quatre\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:27:16+00:00\"},{\"id\":\"http://localhost/base-kirby/home/article-5\",\"url\":\"http://localhost/base-kirby/home/article-5\",\"id_print\":\"4\",\"title\":\"article-5\",\"content_html\":\"Le message numero cinq\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:27:31+00:00\"},{\"id\":\"http://localhost/base-kirby/home/artthfgklbf\",\"url\":\"http://localhost/base-kirby/home/artthfgklbf\",\"id_print\":\"5\",\"title\":\"artthfgklbf\",\"content_html\":\"Le message numero six\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-08T11:55:35+00:00\"},{\"id\":\"http://localhost/base-kirby/home/oasdvhjkfbhjk\",\"url\":\"http://localhost/base-kirby/home/oasdvhjkfbhjk\",\"id_print\":\"6\",\"title\":\"oasdvhjkfbhjk\",\"content_html\":\"Le message numero sept\",\"date_published\":\"1970-01-01T00:00:00+00:00\",\"date_modified\":\"2020-10-07T14:28:08+00:00\"}]}";
     
-    deserializeJson(doc, json);
-    //deserializeJson(doc, json);
-    //deserializeJson(doc, client);
+    deserializeJson(doc, client);
     Serial.println("deserialization done");
     
     JsonArray items = doc["items"];
@@ -165,8 +162,6 @@ void parseData(){
     }
     
     Serial.println("end of parseData");
-    //to delete when making internet request...
-    lastConnectionTime = millis();
 }
 
 
