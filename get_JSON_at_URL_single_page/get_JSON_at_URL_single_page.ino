@@ -38,7 +38,6 @@ void setup() {
   
   // Initialize Serial port
   Serial.begin(9600);
-  Serial.println("printing url");
   
   while (!Serial) continue;
 
@@ -67,6 +66,7 @@ void setup() {
   }
 
   delay(1000);
+  
   
   //parseData();
  
@@ -98,6 +98,7 @@ void loop() {
 // Getting the info...
 void httpRequest(){
    Serial.println("requesting page number");
+  
    Serial.println(currPage);
    // close any connection before send a new request.
   // This will free the socket on the WiFi shield
@@ -148,14 +149,17 @@ void httpRequest(){
     // if you couldn't make a connection:
     Serial.println("connection failed");
   }
+  
 }
 
 void parseData(){
     const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 450;
     DynamicJsonDocument doc(capacity);
-    const char* json = "{\"data\":[{\"id\":\"16\",\"text\":\"A long message with over 140 characters, this might be long and maybe event longer than this. A long message with over 140 characters, this might be long and maybe event longer than this. A long message with over 140 characters, this might be long and maybe event longer than this. A long message with over 140 characters, this might be long and maybe event longer than this.\"}],\"pages\":{},\"page\":17}";
+    const char* json = "{\"data\":[{\"id\":\"16\",\"text\":\"A long message, that can have many lengths. Here this will be a few lines, in order for us to test it.\"}],\"pages\":{},\"page\":17}";
 
+    //Local json:
     //deserializeJson(doc, json);
+    //Online json:
     deserializeJson(doc, client);
 
     const char* text = doc["data"][0]["text"]; 
@@ -170,8 +174,6 @@ void parseData(){
 void dispatch(const char* Message){
   Serial.println("Dispatch!");
   const char* message = Message; 
-  Serial.print("dispatching :");
-  Serial.println(message);
   sendMessage(activePrinter, message);
   activePrinter++; //passage à l'imprimante suivante au prochain message.
   if(activePrinter > printerQuantity){ // si supérieur au nombre de printer retour au premier.
@@ -182,9 +184,23 @@ void dispatch(const char* Message){
 void sendMessage(int ActivePrinter, const char* Message){
   int activePrinter = ActivePrinter;
   const char* message = Message;
-  Serial.print("sendMessage, beginTransmission to printer ");
-  Serial.println(activePrinter);
+  const char* endMessage = "-END-";
+  
+  //Split the text in bits of 32 chars:
+  int num_chunks = ceil(strlen(message)/32)+1;
+  for(int i = 0 ; i< num_chunks; i++){
+    char line[32];
+    for(int j = 0; j<32; j++){
+      line[j] =  message[j+i*32];      
+      }
+     //Serial.println("line is now...");
+     Serial.print(line);
+     Wire.beginTransmission(activePrinter); // transmit to device #1
+     Wire.write(line);  
+     Wire.endTransmission();    // stop transmitting  
+  }
+  //Send an end message
   Wire.beginTransmission(activePrinter); // transmit to device #1
-  Wire.write(message);  
+  Wire.write(endMessage);  
   Wire.endTransmission();    // stop transmitting  
 }
