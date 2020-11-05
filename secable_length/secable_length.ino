@@ -1,6 +1,6 @@
 
 
-String str ="HelloWorld!Hereis some text. I need them to split into multiple lines without breaking the words.";
+String str ="Hello World! Here is some text. I need them to split into multiple lines without breaking the words.";
 const int wantedLength = 15;
 
 String lines [10];
@@ -56,6 +56,8 @@ void split(){
   while(str.charAt(c)!= ' '){
           c--;
   }
+  //handle the last word, 
+  //add it to the current line if the word is short enough. 
   lines[cl]=str.substring(c+1,str.length());
 
 }
