@@ -5,7 +5,9 @@
 
 
 // Initialize Ethernet library
-byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+//byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+byte mac[] = {0x2C, 0xF7, 0xF1, 0x08, 0x1F, 0x67};
+//2C F7 F1 08 1F 67
 
 // Set the static IP address to use if the DHCP fails to assign
 IPAddress ip(192, 168, 0, 177);
@@ -19,7 +21,7 @@ EthernetClient client;
 char server[] = "www.vanderlanth.io";  // also change the Host line in httpRequest()
 
 unsigned long lastConnectionTime = 0;           // last time you connected to the server, in milliseconds
-const unsigned long postingInterval = 3*1000;  // delay between updates, in milliseconds
+const unsigned long postingInterval = 10*1000;  // delay between updates, in milliseconds
 
 int currId = -1 ;
 int currPage = 1;
@@ -107,11 +109,11 @@ void httpRequest(){
   if (client.connect(server, 80)) {
     Serial.println("connecting...");
     // send the HTTP GET request:
-    String pageUrl = "GET /sub/dee/fr/event.json/page:"+String(currPage);
-    
+    String pageUrl = "GET /sub/dee/fr/event.json/page:"+String(currPage)+" HTTP/1.0";
+    //Serial.println();
     //getting the current URL
     client.println(pageUrl);
-    //client.println(F("GET /sub/dee/fr/event.json/page:1"));
+    //client.println(F("GET /sub/dee/fr/event.json/page:1 HTTP/1.0"));
     
     client.println(F("Host: vanderlanth.io"));
     client.println(F("Connection: close"));
@@ -126,6 +128,7 @@ void httpRequest(){
     if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
       Serial.print(F("Unexpected response: "));
       Serial.println(status);
+      lastConnectionTime = millis();
       return;
     }
     else{
@@ -173,7 +176,7 @@ void dispatch(const char* Message){
   Serial.println("Dispatch!");
   const char* message = Message; 
   sendMessage(activePrinter, message);
-  activePrinter++; //passage à l'imprimante suivante au prochain message.
+  //activePrinter++; //passage à l'imprimante suivante au prochain message.
   if(activePrinter > printerQuantity){ // si supérieur au nombre de printer retour au premier.
     activePrinter = 1;
   }
@@ -182,7 +185,7 @@ void dispatch(const char* Message){
 
 void sendMessage(int ActivePrinter, const char* Message){
   int activePrinter = ActivePrinter;
-  const char* message = Message;
+  const char* message = "passage à l'imprimante suivante au prochain message.passage à l'imprimante suivante au prochain message.";
   const char* endMessage = "-END-";
   
   //Split the text in bits of 32 chars:
@@ -200,6 +203,7 @@ void sendMessage(int ActivePrinter, const char* Message){
      Wire.endTransmission();    // stop transmitting  
   }
   //Send an end message
+  
   Serial.println("ending transmission");
   Wire.beginTransmission(activePrinter); // transmit to device #1
   Wire.write(endMessage);  

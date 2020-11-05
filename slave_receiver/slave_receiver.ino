@@ -3,7 +3,7 @@
 
 
 #include "SoftwareSerial.h"
-#define TX_PIN 6 // Arduino transmit  YELLOW WIRE  labeled RX on printer
+#define TX_PIN 4 // Arduino transmit  YELLOW WIRE  labeled RX on printer
 #define RX_PIN 5 // Arduino receive   GREEN WIRE   labeled TX on printer
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
 Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
@@ -18,7 +18,7 @@ int index = 0;
 
 void setup()
 {
-  Wire.begin(2);
+  Wire.begin(1);
   Serial.begin(9600);
   Serial.println("SETUP");
   Wire.onReceive(receiveEvent);
@@ -33,14 +33,17 @@ void setup()
 void printMessage(){
   Serial.println("PRINT !!!!");
   Serial.println(pendingData);
+  printer.println(data);
   printer.wake();
   printer.feed(2);
   printer.sleep();
   hasPrinted = true;
+  isPrintNeeded = false;
   pendingData = "";
 }
 
 void checkIfPrintIsNeeded(){
+  
   if(isPrintNeeded && !hasPrinted){
       Serial.println("Printing Message");
       printMessage();
@@ -59,14 +62,14 @@ void receiveEvent()
   while( Wire.available()){
     data += (char)Wire.read(); 
     //Serial.println("char is");
-    Serial.println((char)Wire.read());
+    //Serial.println((char)Wire.read());
 
   }
-  Serial.println(data);
+  Serial.println(data);/*
   if(isPrintNeeded == false){
     pendingData = data;
     
     isPrintNeeded = true;
     hasPrinted = false;
-   }
+   }*/
 }
