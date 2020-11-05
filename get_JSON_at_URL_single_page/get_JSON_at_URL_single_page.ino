@@ -97,8 +97,7 @@ void loop() {
 
 // Getting the info...
 void httpRequest(){
-   Serial.println("requesting page number");
-  
+   Serial.print("requesting page number");
    Serial.println(currPage);
    // close any connection before send a new request.
   // This will free the socket on the WiFi shield
@@ -153,6 +152,7 @@ void httpRequest(){
 }
 
 void parseData(){
+    Serial.println("parse data");
     const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 450;
     DynamicJsonDocument doc(capacity);
     const char* json = "{\"data\":[{\"id\":\"16\",\"text\":\"A long message, that can have many lengths. Here this will be a few lines, in order for us to test it.\"}],\"pages\":{},\"page\":17}";
@@ -169,8 +169,6 @@ void parseData(){
     Serial.println("end of parseData");
 }
 
-
-
 void dispatch(const char* Message){
   Serial.println("Dispatch!");
   const char* message = Message; 
@@ -180,6 +178,7 @@ void dispatch(const char* Message){
     activePrinter = 1;
   }
 }
+
 
 void sendMessage(int ActivePrinter, const char* Message){
   int activePrinter = ActivePrinter;
@@ -194,12 +193,14 @@ void sendMessage(int ActivePrinter, const char* Message){
       line[j] =  message[j+i*32];      
       }
      //Serial.println("line is now...");
+     Serial.println("sending the following:");
      Serial.print(line);
      Wire.beginTransmission(activePrinter); // transmit to device #1
      Wire.write(line);  
      Wire.endTransmission();    // stop transmitting  
   }
   //Send an end message
+  Serial.println("ending transmission");
   Wire.beginTransmission(activePrinter); // transmit to device #1
   Wire.write(endMessage);  
   Wire.endTransmission();    // stop transmitting  
