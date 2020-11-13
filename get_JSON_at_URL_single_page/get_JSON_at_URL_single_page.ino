@@ -17,6 +17,7 @@ EthernetClient client;
 
 //url: https://vanderlanth.io/sub/dee/fr/event.json/page:17
 char server[] = "www.vanderlanth.io";  // also change the Host line in httpRequest()
+String path = "/sub/dee/fr/event.json/page:";
 
 unsigned long lastConnectionTime = 0;           // last time you connected to the server, in milliseconds
 const unsigned long postingInterval = 3*1000;  // delay between updates, in milliseconds
@@ -28,6 +29,8 @@ int currPage = 1;
 int activePrinter = 1;
 int printerQuantity = 7;
 int bufferSize = 32;
+
+bool isRequestSuccesful = true;
 
 byte x = 0;
 
@@ -67,10 +70,6 @@ void setup() {
   }
 
   delay(1000);
-  
-  
-  //parseData();
- 
 }
 
 void loop() {
@@ -89,8 +88,7 @@ void loop() {
     // then connect again and send data:
     if (millis() - lastConnectionTime > postingInterval) {
       httpRequest();
-      parseData();
-     
+      if(isRequestSuccesful) parseData();
     }
     
 }
@@ -98,7 +96,7 @@ void loop() {
 
 // Getting the info...
 void httpRequest(){
-   Serial.print("requesting page number");
+   Serial.print("requesting page number ");
    Serial.println(currPage);
    // close any connection before send a new request.
   // This will free the socket on the WiFi shield
@@ -108,7 +106,7 @@ void httpRequest(){
   if (client.connect(server, 80)) {
     Serial.println("connecting...");
     // send the HTTP GET request:
-    String pageUrl = "GET /sub/dee/fr/event.json/page:"+String(currPage);
+    String pageUrl = "GET "+path+String(currPage)+" HTTP/1.0";
     
     //getting the current URL
     client.println(pageUrl);
@@ -118,6 +116,8 @@ void httpRequest(){
     client.println(F("Connection: close"));
     if (client.println() == 0) {
       Serial.println(F("Failed to send request"));
+      isRequestSuccesful = false;
+      client.stop();
       return;
     }
     
@@ -127,10 +127,14 @@ void httpRequest(){
     if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
       Serial.print(F("Unexpected response: "));
       Serial.println(status);
+      isRequestSuccesful = false;
+      lastConnectionTime = millis();
+      client.stop();
       return;
     }
     else{
       Serial.println("connection succesful, incrementing page to request.");
+      isRequestSuccesful = true;
       //increment the page to check
       currPage++;
      }
@@ -139,6 +143,7 @@ void httpRequest(){
     char endOfHeaders[] = "\r\n\r\n";
     if (!client.find(endOfHeaders)) {
       Serial.println(F("Invalid response"));
+      client.stop();
       return;
     }
  
@@ -148,6 +153,9 @@ void httpRequest(){
   } else {
     // if you couldn't make a connection:
     Serial.println("connection failed");
+    lastConnectionTime = millis();
+    client.stop();
+    return;
   }
   
 }
@@ -195,7 +203,7 @@ void sendMessage(int ActivePrinter, const char* Message){
       }
      //Serial.println("line is now...");
      Serial.println("sending the following:");
-     Serial.print(line);
+     Serial.println(line);  
      Wire.beginTransmission(activePrinter); // transmit to device #1
      Wire.write(line);  
      Wire.endTransmission();    // stop transmitting  
