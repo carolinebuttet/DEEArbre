@@ -1,6 +1,10 @@
 
 
+<<<<<<< Updated upstream
 String str ="Hello World! Here is some text. I need them to split into multiple lines without breaking the words.";
+=======
+String str ="Hello World! Here is some text. Ineedthemtosplit into multiple lines without breaking the words.";
+>>>>>>> Stashed changes
 const int wantedLength = 15;
 
 String lines [10];
@@ -42,8 +46,10 @@ void split(){
     }else
     {
       letterWithoutSpace++;
-      if (letterWithoutSpace > wantedLength)
+      Serial.println(letterWithoutSpace);
+      if (letterWithoutSpace>(wantedLength-endOfLine))
       {
+       
         lines[cl]=str.substring(endOfLine,c); //take the selection and past it in the lines array
         endOfLine = c; //+1 to ignore space at the begining of the line. 
         cl++;
@@ -56,8 +62,12 @@ void split(){
   while(str.charAt(c)!= ' '){
           c--;
   }
+<<<<<<< Updated upstream
   //handle the last word, 
   //add it to the current line if the word is short enough. 
+=======
+  
+>>>>>>> Stashed changes
   lines[cl]=str.substring(c+1,str.length());
 
 }
