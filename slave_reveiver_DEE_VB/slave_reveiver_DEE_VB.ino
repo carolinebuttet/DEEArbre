@@ -44,9 +44,9 @@ void setup() {
   //serial for debuging
   Serial.begin(9600);
   
-  //fillString();
-  //printMessage();
-  //endOfPrinting();
+  fillString();
+  printMessage();
+  endOfPrinting();
 }
 
 void loop() {
@@ -88,7 +88,7 @@ void fillString(){
 void printMessage(){
 	messageNeedTobePrinted = false;
 	printer.feed(1);
-	/*
+	
 	for (int i = 0; i < numOfLine; i++)
 	{
 		for (int j = 0; j < numOfCharByLine; ++j)
@@ -96,8 +96,8 @@ void printMessage(){
 			printer.write(lines[i][j]);
 		}
 		printer.println();
-	}*/
-	printer.write(0x82);
+	}
+	//printer.write(0x82);
 	printer.feed(2);
 	
 	
@@ -118,4 +118,3 @@ void specialChar(){
 		}
 	}
 }
-
