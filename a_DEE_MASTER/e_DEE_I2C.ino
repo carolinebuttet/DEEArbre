@@ -23,6 +23,7 @@ void dispatch(const char* Message){
 // This function sends the message to the slave via i2c
 // It will break the message in chunks of 32 chars
 // And send an end message at the end ( endMessage )
+
 void sendMessage(int ActivePrinter, const char* Message){
   int activePrinter = ActivePrinter;
   const char* message = Message;
@@ -42,7 +43,7 @@ void sendMessage(int ActivePrinter, const char* Message){
   for(int i = 0 ; i< num_chunks; i++){ //For each chunk, create an array of 32 chars and send them over via i2c
     char line[32];
     for(int j = 0; j<32; j++){
-      line[j] =  message[j+i*32];      
+        line[j] =  message[j+i*32];       
      }
      Wire.beginTransmission(activePrinter); // transmit to device
      Wire.write(line);   // Send the line

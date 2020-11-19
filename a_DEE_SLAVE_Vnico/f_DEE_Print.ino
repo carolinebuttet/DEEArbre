@@ -11,6 +11,7 @@ void printMessage(String messageArray[], int numLinesForCurrentMessage ){
 
 
   //Iterate throught the arrays of Strings to print the line
+  printer.wake();
   printer.upsideDownOn();
   printer.setSize('L'); 
   printer.feed(1);
@@ -33,9 +34,7 @@ void printMessage(String messageArray[], int numLinesForCurrentMessage ){
   printer.feed(2);
   printer.sleep();      // Tell printer to sleep
   delay(3000L);         // Sleep for 3 seconds
-  printer.wake();
 
- 
 }
 
 void printLine(String line){

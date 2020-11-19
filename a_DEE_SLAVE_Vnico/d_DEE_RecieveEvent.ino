@@ -10,8 +10,11 @@ void receiveEvent() {
   while(Wire.available())
   {
     char c = Wire.read();    // receive a byte as character
-    line[index] = c;         // we store all the received characters in a single array
-    index++;                 // we increment the index
+    if( c != '\r' && c != '\n')  // ignore trailing CR and LF
+      {   
+           line[index] = c;         // we store all the received characters in a single array
+           index++;                 // we increment the index
+      }
   }
 
   bool isMessageComplete = messageComplete(line);  // we check if the line we received is the -END- Message
@@ -19,8 +22,10 @@ void receiveEvent() {
     String message = receivedMessage[0];           // we get the message
     processMessageForPrint(message);               // and we process it for printing (word wrap), in e_DEE_StringSplit
     numLines = 0;     // we reset the numlines to 0
-    for(int i=0; i<32;i++){
-      receivedMessage[0][i]=0;
+    for(int j = 0; j< 10; j++){
+      for(int i = 0; i< 32; i++){
+        receivedMessage[j][i]=0; 
+      }
     }
   }
  

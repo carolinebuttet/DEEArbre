@@ -10,7 +10,7 @@ Adafruit_Thermal printer(&mySerial);
 //Debug mode will print a local message instead of the message received over I2C
 bool DEBUG_ENABLED = false;
 bool MSG_NEED_TO_BE_P = false;
-int SLAVE_ID = 5;
+int SLAVE_ID = 1;
 String lines[10]; // An arrayy of String to store our final message
 int numLinesS = 0;  
 
