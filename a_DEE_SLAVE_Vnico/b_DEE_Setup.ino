@@ -17,4 +17,5 @@ void setup() {
   Serial.print("DEBUG_ENABLED MODE IS ");
   if(DEBUG_ENABLED) Serial.println("ON");
   else Serial.println("OFF");
+   int countdownMS = Watchdog.enable(8000);
 }

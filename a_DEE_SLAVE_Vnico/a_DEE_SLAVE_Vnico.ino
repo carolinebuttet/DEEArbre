@@ -2,6 +2,8 @@
 
 #include "Adafruit_Thermal.h"
 #include "SoftwareSerial.h"
+#include <Adafruit_SleepyDog.h>
+
 #define TX_PIN 4 // Arduino transmit labeled RX on printer
 #define RX_PIN 5 // Arduino receive  labeled TX on printer
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
@@ -10,8 +12,8 @@ Adafruit_Thermal printer(&mySerial);
 //Debug mode will print a local message instead of the message received over I2C
 bool DEBUG_ENABLED = false;
 bool MSG_NEED_TO_BE_P = false;
-int SLAVE_ID = 1;
-String lines[10]; // An arrayy of String to store our final message
+int SLAVE_ID = 2;
+String lines[20]; // An arrayy of String to store our final message
 int numLinesS = 0;  
 
 char receivedMessage[10][32];

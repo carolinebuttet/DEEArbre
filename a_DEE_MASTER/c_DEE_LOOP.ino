@@ -5,6 +5,7 @@ void loop() {
     // if 5 seconds have passed since your last connection,
     // then connect again and send data:
     if (millis() - lastConnectionTime > postingInterval) {
+      Watchdog.reset();
       httpRequest(); //Request the data (in d_DEE_ETHERNET)
 
       //If the request is succesful
@@ -15,5 +16,6 @@ void loop() {
         }
       };      
     }
+    
     
 }

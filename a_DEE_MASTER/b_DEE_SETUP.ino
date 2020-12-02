@@ -11,4 +11,5 @@ void setup() {
   delay(1000); 
   setupEthernet(); // Setup the etherner shield (in d_DEE_ETHERNER)
   delay(1000);
+  int countdownMS = Watchdog.enable(8000);
 }

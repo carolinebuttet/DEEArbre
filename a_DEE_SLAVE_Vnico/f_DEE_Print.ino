@@ -5,13 +5,14 @@ void printMessage(String messageArray[], int numLinesForCurrentMessage ){
   //In array d'une longueur égale à n (numLinesForCurrentMessage)
   
   //Il faut itérer dans chaque entrée de l'array pour trouver un String comme ici: 
-  Serial.print("... Printing following message into ");
+  /*Serial.print("... Printing following message into ");
   Serial.print(numLinesForCurrentMessage);
-  Serial.println(" lines ...");
+  Serial.println(" lines ...");*/
 
 
   //Iterate throught the arrays of Strings to print the line
   printer.wake();
+  printer.setDefault(); // Restore printer to defaults // probable
   printer.upsideDownOn();
   printer.setSize('L'); 
   printer.feed(1);
@@ -26,6 +27,7 @@ void printMessage(String messageArray[], int numLinesForCurrentMessage ){
   for(int j = numLinesForCurrentMessage-1; j>= 0; j--){
     String line = messageArray[j];
     printLine(line);
+    Watchdog.reset();
   }
   
 

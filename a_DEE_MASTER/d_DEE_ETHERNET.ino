@@ -55,6 +55,7 @@ void httpRequest(){
       Serial.println(F("Failed to send request"));
       isRequestSuccesful = false;
       client.stop();
+      Watchdog.reset();
       return;
     }
     
@@ -67,6 +68,7 @@ void httpRequest(){
       isRequestSuccesful = false;
       lastConnectionTime = millis();
       client.stop();
+      Watchdog.reset();
       return;
     }
     else{
@@ -77,20 +79,24 @@ void httpRequest(){
         Serial.println("connection succesful, incrementing page to request.");
         currPage++;
         }else{
+          
         Serial.println("connection succesful, not incrementing because DEBUG_ENABLED is true");
         }
+        Watchdog.reset();
      }
   
     // Skip HTTP headers
     char endOfHeaders[] = "\r\n\r\n";
     if (!client.find(endOfHeaders)) {
       Serial.println(F("Invalid response"));
+      Watchdog.reset();
       client.stop();
       return;
     }
  
     
     // note the time that the connection was made:
+    Watchdog.reset();
     lastConnectionTime = millis();
   } else {
     // if you couldn't make a connection:
@@ -98,6 +104,7 @@ void httpRequest(){
     isRequestSuccesful = false;
     lastConnectionTime = millis();
     client.stop();
+    Watchdog.reset();
     httpRequest();
     return;
   }

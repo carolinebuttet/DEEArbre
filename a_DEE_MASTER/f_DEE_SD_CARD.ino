@@ -68,7 +68,9 @@ void getSDCardInfo(){
     // close the file:
     myFile.close();
     currPage = atoi(buffer); // Set currPage to the value that is inside the txt file
-    
+    if(currPage == 0){
+      currPage = 1;
+    }
     return true;   
   } else {
     Serial.print("error opening ");

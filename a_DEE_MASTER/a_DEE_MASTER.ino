@@ -6,6 +6,7 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
+#include <Adafruit_SleepyDog.h>
 
 
 // DEBUG MODE: 
@@ -21,9 +22,9 @@ byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED}; // The mac address of the shi
 IPAddress ip(192, 168, 0, 177); // The ip address of the shield
 IPAddress myDns(192, 168, 0, 1);
 EthernetClient client; 
-char server[] = "www.vanderlanth.io"; 
-String host = "Host: vanderlanth.io";
-String path = "/sub/dee/fr/event.json/page:"; // url: https://vanderlanth.io/sub/dee/fr/event.json/page:17
+char server[] = "www.dee-vwd.ch"; 
+String host = "Host: dee-vwd.ch";
+String path = "/2021/fr/event.json/page:"; // url: https://vanderlanth.io/sub/dee/fr/event.json/page:17
 unsigned long lastConnectionTime = 0;           // last time you connected to the server, in milliseconds
 const unsigned long postingInterval = POST_INTERVAL*1000;  // delay between the page request, in milliseconds
 bool isRequestSuccesful = true;

@@ -10,11 +10,10 @@ void receiveEvent() {
   while(Wire.available())
   {
     char c = Wire.read();    // receive a byte as character
-    if( c != '\r' && c != '\n')  // ignore trailing CR and LF
-      {   
-           line[index] = c;         // we store all the received characters in a single array
-           index++;                 // we increment the index
-      }
+      
+   line[index] = c;         // we store all the received characters in a single array
+   index++;                 // we increment the index
+      
   }
 
   bool isMessageComplete = messageComplete(line);  // we check if the line we received is the -END- Message

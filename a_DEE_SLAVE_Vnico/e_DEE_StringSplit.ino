@@ -1,5 +1,9 @@
 void processMessageForPrint(String message){
   String messageToProcess = message;
+  messageToProcess.replace("\n"," ");
+  messageToProcess.replace("\r"," ");
+  
+  Serial.println(message);
   if(DEBUG_ENABLED){
     messageToProcess = "Joyeux Noël à tous et une bonne et heureuse année ABCDEFGHIJKLMNOPQRSTUVWXYZ Et zoup ti dop!";
    }
